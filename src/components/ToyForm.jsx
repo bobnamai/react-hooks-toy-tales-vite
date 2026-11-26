@@ -1,40 +1,42 @@
 import React from "react";
 
-function ToyForm() {
+function ToyForm({ onAddToy }) {
+  const [name, setName] = React.useState("");
+  const [image, setImage] = React.useState("");
+  const [error, setError] = React.useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!e.target.name.value || !e.target.image.value) {
+    if (!name || !image) {
       alert("Please fill in all fields.");
       return;
     }
 
     const newToy = {
-      name: e.target.name.value,
-      image: e.target.image.value,
+      name,
+      image,
       likes: 0,
     };
 
     fetch("http://localhost:3001/toys", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newToy),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to add toy");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                // onAddProduct(data); // Update UI with new product
-                alert("Toy added successfully!");
-                setTitle("");
-                setPrice("");
-                setCategory("");
-            })
-            .catch((err) => setError(err.message));
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newToy),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to add toy: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((addedToy) => {
+        onAddToy(addedToy);
+        setName("");
+        setImage("");
+        setError("");
+      })
+      .catch((err) => setError(err.message));
   };
 
   return (
@@ -46,6 +48,8 @@ function ToyForm() {
           name="name"
           placeholder="Enter a toy's name..."
           className="input-text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <br />
         <input
@@ -53,8 +57,11 @@ function ToyForm() {
           name="image"
           placeholder="Enter a toy's image URL..."
           className="input-text"
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
         />
         <br />
+        {error && <p role="alert">{error}</p>}
         <input
           type="submit"
           name="submit"
