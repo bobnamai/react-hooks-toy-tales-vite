@@ -12,10 +12,29 @@ function ToyContainer() {
       .then((data) => setToys(data));
   }, []);
 
+  function handleToyUpdated(updatedToy) {
+    setToys((currentToys) =>
+      currentToys.map((toy) =>
+        toy.id === updatedToy.id ? updatedToy : toy
+      )
+    );
+  }
+
+  function handleToyDeleted(deletedToyId) {
+    setToys((currentToys) =>
+      currentToys.filter((toy) => toy.id !== deletedToyId)
+    );
+  }
+
   return (
     <div id="toy-collection">
       {toys.map((toy) => (
-        <ToyCard key={toy.id} toy={toy} />
+        <ToyCard
+          key={toy.id}
+          toy={toy}
+          onToyUpdated={handleToyUpdated}
+          onToyDeleted={handleToyDeleted}
+        />
       ))}
     </div>
   );
