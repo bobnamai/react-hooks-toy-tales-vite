@@ -13,6 +13,7 @@ function ToyForm() {
     const newToy = {
       name: e.target.name.value,
       image: e.target.image.value,
+      likes: 0,
     };
 
     fetch("http://localhost:3001/toys", {
