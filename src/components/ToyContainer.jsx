@@ -12,10 +12,22 @@ function ToyContainer() {
       .then((data) => setToys(data));
   }, []);
 
+  function handleToyUpdated(updatedToy) {
+    setToys((currentToys) =>
+      currentToys.map((toy) =>
+        toy.id === updatedToy.id ? updatedToy : toy
+      )
+    );
+  }
+
   return (
     <div id="toy-collection">
       {toys.map((toy) => (
-        <ToyCard key={toy.id} toy={toy} />
+        <ToyCard
+          key={toy.id}
+          toy={toy}
+          onToyUpdated={handleToyUpdated}
+        />
       ))}
     </div>
   );
