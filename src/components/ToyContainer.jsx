@@ -20,6 +20,12 @@ function ToyContainer() {
     );
   }
 
+  function handleToyDeleted(deletedToyId) {
+    setToys((currentToys) =>
+      currentToys.filter((toy) => toy.id !== deletedToyId)
+    );
+  }
+
   return (
     <div id="toy-collection">
       {toys.map((toy) => (
@@ -27,6 +33,7 @@ function ToyContainer() {
           key={toy.id}
           toy={toy}
           onToyUpdated={handleToyUpdated}
+          onToyDeleted={handleToyDeleted}
         />
       ))}
     </div>
